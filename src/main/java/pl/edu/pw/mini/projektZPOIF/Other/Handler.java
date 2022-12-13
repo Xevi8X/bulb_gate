@@ -1,4 +1,4 @@
-package pl.edu.pw.mini.projektZPOIF;
+package pl.edu.pw.mini.projektZPOIF.Other;
 
 
 import org.springframework.http.HttpStatus;
