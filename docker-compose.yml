@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  bulb_gate:
+    container_name: bulb_gate
+    restart: always
+    image: xevi8x/bulb_gate
+    network_mode: "host"
