@@ -63,8 +63,18 @@ public class Bulb {
     private String name;
 
     public void patch(Bulb bulb) {
+        this.location = bulb.getLocation();
+        this.serial = bulb.getSerial();
+        this.model = bulb.getModel();
+        this.support = bulb.getSupport();
         this.power = bulb.isPower();
-        //....
+        this.bright = bulb.getBright();
+        this.colorMode = bulb.getColorMode();
+        this.ct = bulb.getCt();
+        this.rgb = bulb.getRgb();
+        this.hue = bulb.getHue();
+        this.saturation = this.getSaturation();
+        this.name = this.getName();
     }
 
     public static Optional<Bulb> parser (String msg)
