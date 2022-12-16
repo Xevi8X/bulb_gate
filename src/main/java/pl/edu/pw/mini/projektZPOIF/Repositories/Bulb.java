@@ -36,45 +36,45 @@ public class Bulb {
 
     @Getter
     @Setter
-    private int bright;
+    private int bright = -1;
 
     @Getter
     @Setter
-    private int colorMode;
+    private int colorMode = -1;
 
     @Getter
     @Setter
-    private int ct;
+    private int ct = -1;
 
     @Getter
     @Setter
-    private int rgb;
+    private int rgb = -1;
 
     @Getter
     @Setter
-    private int hue;
+    private int hue = -1;
 
     @Getter
     @Setter
-    private int saturation;
+    private int saturation = -1;
 
     @Getter
     @Setter
     private String name;
 
     public void patch(Bulb bulb) {
-        this.location = bulb.getLocation();
-        this.serial = bulb.getSerial();
-        this.model = bulb.getModel();
-        this.support = bulb.getSupport();
-        this.power = bulb.isPower();
-        this.bright = bulb.getBright();
-        this.colorMode = bulb.getColorMode();
-        this.ct = bulb.getCt();
-        this.rgb = bulb.getRgb();
-        this.hue = bulb.getHue();
-        this.saturation = this.getSaturation();
-        this.name = this.getName();
+        if (bulb.getLocation() != this.location && bulb.getLocation() != null) this.location = bulb.getLocation();
+        if (!bulb.getSerial().equals(this.getSerial()) && !bulb.getSerial().isEmpty())this.serial = bulb.getSerial();
+        if (!bulb.getModel().equals(this.model) && !bulb.getModel().isEmpty()) this.model = bulb.getModel();
+        if (!bulb.getSupport().equals(this.support) && bulb.getSupport() != null) this.support = bulb.getSupport();
+        if (bulb.isPower() != this.power) this.power = bulb.isPower();
+        if (bulb.getBright() != this.bright && bulb.getBright() != -1) this.bright = bulb.getBright();
+        if (bulb.getColorMode() != this.colorMode && bulb.getColorMode() != -1)this.colorMode = bulb.getColorMode();
+        if (bulb.getCt() != this.ct && bulb.getCt() != -1) this.ct = bulb.getCt();
+        if (bulb.getRgb() != this.rgb && bulb.getRgb() != -1) this.rgb = bulb.getRgb();
+        if (bulb.getHue() != this.hue && bulb.getHue() != -1) this.hue = bulb.getHue();
+        if (bulb.getSaturation() != this.saturation && bulb.getSaturation() != -1) this.saturation = this.getSaturation();
+        if (!bulb.getName().equals(this.getName()) && !bulb.getName().isEmpty())this.name = this.getName();
     }
 
     public static Optional<Bulb> parser (String msg)
