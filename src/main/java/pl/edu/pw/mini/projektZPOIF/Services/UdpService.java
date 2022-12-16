@@ -9,6 +9,7 @@ import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
 
 import java.net.*;
+import java.util.Arrays;
 
 @Slf4j
 @Service
@@ -55,10 +56,31 @@ public class UdpService {
 
     public void receiveBulb(Message message)
     {
-        String data = new String((byte[]) message.getPayload());
-        String[] dataDivided = data.split("\n");
-        String[] location = dataDivided[4].split(":");
-        int port = Integer.parseInt(location[2]);
-        //bulbRepository.addBulb(new Bulb(dataDivided[6].split(":")[1].substring(1), "", new InetSocketAddress()));
+        try {
+            String data = new String((byte[]) message.getPayload());
+            String[] dataDivided = data.split("\r\n");
+            String[] location = dataDivided[4].split(":");
+            String ip = location[1].substring(12);
+            int port = Integer.parseInt(location[2]);
+            InetSocketAddress address = new InetSocketAddress(InetAddress.getByName(ip), port);
+            String id = dataDivided[6].split(" ")[1];
+            String model = dataDivided[7].split(" ")[1];
+            String[] supportList = dataDivided[9].split(" ");
+            String[] support = Arrays.copyOfRange(supportList, 1, supportList.length);
+            Boolean power = dataDivided[10].split(" ")[1].equals("on");
+            int bright = Integer.parseInt(dataDivided[11].split(" ")[1]);
+            int colorMode = Integer.parseInt(dataDivided[12].split(" ")[1]);
+            int ct = Integer.parseInt(dataDivided[13].split(" ")[1]);
+            int rgb = Integer.parseInt(dataDivided[14].split(" ")[1]);
+            int hue = Integer.parseInt(dataDivided[15].split(" ")[1]);
+            int sat = Integer.parseInt(dataDivided[16].split(" ")[1]);
+            String name = dataDivided[17].split(" ")[1];
+            Bulb newBulb = new Bulb(address, id, model, support, power, bright, colorMode, ct, rgb, hue, sat, name);
+            bulbRepository.addBulb(newBulb);
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage());
+        }
     }
 }

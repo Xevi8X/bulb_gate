@@ -10,13 +10,40 @@ import java.net.InetSocketAddress;
 public class Bulb {
 
     @Getter
+    private InetSocketAddress location;
+
+    @Getter
     private String id;
 
     @Getter
-    private String name;
+    private String model;
 
     @Getter
-    private InetSocketAddress location;
+    private String[] support;
+
+    @Getter
+    private boolean power;
+
+    @Getter
+    private int bright;
+
+    @Getter
+    private int colorMode;
+
+    @Getter
+    private int ct;
+
+    @Getter
+    private int rgb;
+
+    @Getter
+    private int hue;
+
+    @Getter
+    private int sat;
+
+    @Getter
+    private String name;
 
     //poloczenie tcp
 
