@@ -14,6 +14,7 @@ public class BulbRepository {
     public void addBulb(Bulb bulb)
     {
         if(bulbList == null) bulbList = new ArrayList<Bulb>();
+        if(bulbList.stream().anyMatch(b -> b.getSerial().equals(bulb.getSerial()))) return;
         bulbList.add(bulb);
     }
 }

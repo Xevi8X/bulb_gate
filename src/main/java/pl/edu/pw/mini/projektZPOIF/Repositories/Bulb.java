@@ -78,7 +78,7 @@ public class Bulb {
                 case "Location":
                     String[] value = parts[1].split(":");
                     try {
-                        InetSocketAddress address = new InetSocketAddress(InetAddress.getByName(value[1].substring(2)), Integer.parseInt(parts[2]));
+                        InetSocketAddress address = new InetSocketAddress(InetAddress.getByName(value[1].substring(2)), Integer.parseInt(value[2]));
                         bulb.location = address;
                     }
                     catch (Exception e)
