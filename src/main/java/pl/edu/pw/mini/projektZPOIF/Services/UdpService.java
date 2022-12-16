@@ -10,6 +10,7 @@ import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
 
 import java.net.*;
 import java.util.Arrays;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -56,31 +57,13 @@ public class UdpService {
 
     public void receiveBulb(Message message)
     {
-        try {
-            String data = new String((byte[]) message.getPayload());
-            String[] dataDivided = data.split("\r\n");
-            String[] location = dataDivided[4].split(":");
-            String ip = location[1].substring(12);
-            int port = Integer.parseInt(location[2]);
-            InetSocketAddress address = new InetSocketAddress(InetAddress.getByName(ip), port);
-            String id = dataDivided[6].split(" ")[1];
-            String model = dataDivided[7].split(" ")[1];
-            String[] supportList = dataDivided[9].split(" ");
-            String[] support = Arrays.copyOfRange(supportList, 1, supportList.length);
-            Boolean power = dataDivided[10].split(" ")[1].equals("on");
-            int bright = Integer.parseInt(dataDivided[11].split(" ")[1]);
-            int colorMode = Integer.parseInt(dataDivided[12].split(" ")[1]);
-            int ct = Integer.parseInt(dataDivided[13].split(" ")[1]);
-            int rgb = Integer.parseInt(dataDivided[14].split(" ")[1]);
-            int hue = Integer.parseInt(dataDivided[15].split(" ")[1]);
-            int sat = Integer.parseInt(dataDivided[16].split(" ")[1]);
-            String name = dataDivided[17].split(" ")[1];
-            Bulb newBulb = new Bulb(address, id, model, support, power, bright, colorMode, ct, rgb, hue, sat, name);
-            bulbRepository.addBulb(newBulb);
-        }
-        catch (Exception e)
+        Optional<Bulb> newBulb =  Bulb.parser(new String((byte[]) message.getPayload()));
+        if(newBulb.isEmpty())
         {
-            log.error(e.getMessage());
+            log.error("Msg can not be parse\nMessage:\n{}",message);
+            return;
         }
+        bulbRepository.addBulb(newBulb.get());
+
     }
 }
