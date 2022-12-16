@@ -6,12 +6,12 @@ import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
 
 @Service
-public class udpService {
+public class UdpService {
 
     final BulbRepository bulbRepository;
 
     @Autowired
-    public udpService(BulbRepository bulbRepository) {
+    public UdpService(BulbRepository bulbRepository) {
         this.bulbRepository = bulbRepository;
     }
 

@@ -11,10 +11,10 @@ import java.util.List;
 public class BulbService {
 
     final BulbRepository bulbRepository;
-    final udpService udpService;
+    final UdpService udpService;
 
     @Autowired
-    public BulbService(BulbRepository bulbRepository, pl.edu.pw.mini.projektZPOIF.Services.udpService udpService) {
+    public BulbService(BulbRepository bulbRepository, UdpService udpService) {
         this.bulbRepository = bulbRepository;
         this.udpService = udpService;
     }
