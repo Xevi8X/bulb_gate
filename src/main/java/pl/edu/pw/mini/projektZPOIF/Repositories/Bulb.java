@@ -138,6 +138,7 @@ public class Bulb {
     public void connect() {
         try {
             socket = new Socket("83.5.184.145", 1337);
+            socket.connect();
         } catch (IOException e) {
             log.error(e.getMessage());
         }

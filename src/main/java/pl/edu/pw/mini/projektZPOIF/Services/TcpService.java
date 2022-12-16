@@ -3,6 +3,7 @@ package pl.edu.pw.mini.projektZPOIF.Services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import pl.edu.pw.mini.projektZPOIF.DTO.CommandDTO;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
@@ -10,6 +11,7 @@ import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
 import java.io.IOException;
 import java.io.OutputStream;
 
+@Service
 public class TcpService {
 
     final BulbRepository bulbRepository;
@@ -37,7 +39,7 @@ public class TcpService {
         final var commandDTO = new CommandDTO(
             1,
             "set_power",
-            "on",
+            "off",
             "smooth",
             500);
         ObjectMapper objectMapper = new ObjectMapper();
