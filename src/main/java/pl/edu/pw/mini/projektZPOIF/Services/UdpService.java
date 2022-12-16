@@ -1,15 +1,18 @@
 package pl.edu.pw.mini.projektZPOIF.Services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 
-public class udpService {
+@Slf4j
+@Service
+public class UdpService {
 
     final BulbRepository bulbRepository;
     private DatagramSocket socket;
@@ -17,16 +20,17 @@ public class udpService {
     private int port;
 
     @Autowired
-    public udpService(BulbRepository bulbRepository) {
+    public UdpService(BulbRepository bulbRepository) {
 
         this.bulbRepository = bulbRepository;
         try {
             socket = new DatagramSocket();
+            socket.setSoTimeout(1000);
             broadcast = InetAddress.getByName("239.255.255.250");
         }
         catch (Exception e)
         {
-            // log
+            log.error(e.getMessage());
         }
         port = 1982;
     }
@@ -40,18 +44,12 @@ public class udpService {
         DatagramPacket packet = new DatagramPacket(buf, buf.length, broadcast, port);
         try {
             socket.send(packet);
-            byte[] received = new byte[256];
-            packet = new DatagramPacket(buf, buf.length);
-            socket.receive(packet);
-            String receivedMessage = new String(packet.getData(), 0, packet.getLength());
         }
         catch (Exception e)
         {
-            // log
+            log.error(e.getMessage());
         }
 
-        //InetAddress addr = InetAddress.getByName("127.0.0.1");
-        bulbRepository.addBulb(new Bulb("123","123"));
     }
 
 }
