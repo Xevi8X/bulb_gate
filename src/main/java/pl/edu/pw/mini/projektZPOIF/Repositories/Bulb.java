@@ -3,6 +3,9 @@ package pl.edu.pw.mini.projektZPOIF.Repositories;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+
 @AllArgsConstructor
 public class Bulb {
 
@@ -12,7 +15,8 @@ public class Bulb {
     @Getter
     private String name;
 
-    //lokacja
+    @Getter
+    private InetSocketAddress location;
 
     //poloczenie tcp
 

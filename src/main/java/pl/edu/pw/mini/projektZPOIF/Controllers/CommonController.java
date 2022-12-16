@@ -34,7 +34,7 @@ public class CommonController { // super robota
     @GetMapping("/test")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity test(){
-        udpService.scan();
+        udpService.sendSearch();
         return ResponseEntity.ok().build();
     }
 }
