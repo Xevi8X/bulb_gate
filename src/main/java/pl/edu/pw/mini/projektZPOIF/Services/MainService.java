@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MainService {
-
     @Getter
     String version = "1.0";
-
 }
