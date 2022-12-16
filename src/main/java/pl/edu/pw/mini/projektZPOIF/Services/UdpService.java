@@ -2,6 +2,7 @@ package pl.edu.pw.mini.projektZPOIF.Services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.ip.udp.UnicastSendingMessageHandler;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
@@ -17,21 +18,20 @@ import java.net.InetSocketAddress;
 public class UdpService {
 
     final BulbRepository bulbRepository;
-    private DatagramSocket socket;
+    final DatagramSocket socket;
     private InetAddress broadcast;
     private int port;
 
+
+
     @Autowired
-    public UdpService(BulbRepository bulbRepository) {
+    public UdpService(BulbRepository bulbRepository, DatagramSocket datagramSocket) {
 
         this.bulbRepository = bulbRepository;
+        this.socket = datagramSocket;
         try {
-            socket = new DatagramSocket();
-            socket.setSoTimeout(1000);
             broadcast = InetAddress.getByName("239.255.255.250");
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
         port = 1982;
@@ -61,7 +61,5 @@ public class UdpService {
         String[] location = dataDivided[4].split(":");
         int port = Integer.parseInt(location[2]);
         //bulbRepository.addBulb(new Bulb(dataDivided[6].split(":")[1].substring(1), "", new InetSocketAddress()));
-
     }
-
 }
