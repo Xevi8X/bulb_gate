@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.Optional;
-
+@Slf4j
 @NoArgsConstructor
 public class Bulb {
 
@@ -19,7 +20,7 @@ public class Bulb {
 
     @Getter
     @Setter
-    private String id;
+    private String serial;
 
     @Getter
     @Setter
@@ -55,7 +56,7 @@ public class Bulb {
 
     @Getter
     @Setter
-    private int sat;
+    private int saturation;
 
     @Getter
     @Setter
@@ -74,32 +75,55 @@ public class Bulb {
 
             switch (parts[0])
             {
+                case "Location":
+                    String[] value = parts[1].split(":");
+                    try {
+                        InetSocketAddress address = new InetSocketAddress(InetAddress.getByName(value[1].substring(2)), Integer.parseInt(parts[2]));
+                        bulb.location = address;
+                    }
+                    catch (Exception e)
+                    {
+                        log.error(e.getMessage());
+                    }
+                    break;
+                case "id":
+                    bulb.serial = parts[1];
+                    break;
+                case "model":
+                    bulb.model = parts[1];
+                    break;
+                case "support":
+                    bulb.support = parts[1].split(" ");
+                    break;
                 case "power":
                     if(parts[1].equals("on")) bulb.setPower(true);
                     if(parts[1].equals("off")) bulb.setPower(false);
-                break;
-
+                    break;
+                case "bright":
+                    bulb.bright = Integer.parseInt(parts[1]);
+                    break;
+                case "color_mode":
+                    bulb.colorMode = Integer.parseInt(parts[1]);
+                    break;
+                case "ct":
+                    bulb.ct = Integer.parseInt(parts[1]);
+                    break;
+                case "rgb":
+                    bulb.rgb = Integer.parseInt(parts[1]);
+                    break;
+                case "hue":
+                    bulb.hue = Integer.parseInt(parts[1]);
+                    break;
+                case "sat":
+                    bulb.saturation = Integer.parseInt(parts[1]);
+                    break;
+                case "name":
+                    bulb.name = parts[1];
+                    break;
             }
         }
 
-        /*
-        String ip = location[1].substring(12);
-        int port = Integer.parseInt(location[2]);
-        InetSocketAddress address = new InetSocketAddress(InetAddress.getByName(ip), port);
-        String id = dataDivided[6].split(" ")[1];
-        String model = dataDivided[7].split(" ")[1];
-        String[] supportList = dataDivided[9].split(" ");
-        String[] support = Arrays.copyOfRange(supportList, 1, supportList.length);
-        Boolean power = dataDivided[10].split(" ")[1].equals("on");
-        int bright = Integer.parseInt(dataDivided[11].split(" ")[1]);
-        int colorMode = Integer.parseInt(dataDivided[12].split(" ")[1]);
-        int ct = Integer.parseInt(dataDivided[13].split(" ")[1]);
-        int rgb = Integer.parseInt(dataDivided[14].split(" ")[1]);
-        int hue = Integer.parseInt(dataDivided[15].split(" ")[1]);
-        int sat = Integer.parseInt(dataDivided[16].split(" ")[1]);
-        String name = dataDivided[17].split(" ")[1];*/
-
-        if(bulb.id.isEmpty()) bulb.id ="-1";
+        if(bulb.serial.isEmpty()) bulb.serial ="-1";
         if(bulb.location == null) return Optional.empty();
         return Optional.of(bulb);
     }
