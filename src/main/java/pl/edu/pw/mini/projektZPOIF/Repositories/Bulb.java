@@ -10,11 +10,12 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.Optional;
-@Slf4j
-@NoArgsConstructor
+
 import java.io.IOException;
 import java.net.Socket;
 
+@Slf4j
+@NoArgsConstructor
 public class Bulb {
 
     @Getter
@@ -65,6 +66,9 @@ public class Bulb {
     @Setter
     private String name;
 
+    @Getter
+    private Socket socket;
+
     public static Optional<Bulb> parser (String msg)
     {
         Bulb bulb = new Bulb();
@@ -75,9 +79,7 @@ public class Bulb {
         {
             String[] parts = line.split(": ");
             if(parts.length != 2) continue;
-    //poloczenie tcp
-    @Getter
-    private Socket socket;
+
 
             switch (parts[0])
             {
@@ -137,7 +139,7 @@ public class Bulb {
         try {
             socket = new Socket("83.5.184.145", 1337);
         } catch (IOException e) {
-            // nie udalo sie polaczyc
+            log.error(e.getMessage());
         }
     }
 }

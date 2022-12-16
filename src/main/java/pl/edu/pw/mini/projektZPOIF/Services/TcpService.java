@@ -21,6 +21,7 @@ public class TcpService {
 
     public void connectToBulbs() {
         //pootwierac TCP
+        bulbRepository.addBulb(new Bulb());
         for (Bulb bulb : bulbRepository.getBulbList()) {
             bulb.connect();
         }
@@ -44,5 +45,9 @@ public class TcpService {
 
         OutputStream out = bulb.getSocket().getOutputStream();
         out.write(json);
+    }
+
+    public void setPower(Boolean on) throws IOException {
+        setPower(bulbRepository.getBulbList().get(0), true);
     }
 }
