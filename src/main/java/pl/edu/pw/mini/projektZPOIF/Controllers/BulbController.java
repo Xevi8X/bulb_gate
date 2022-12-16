@@ -38,12 +38,12 @@ public class BulbController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Bulb> getBulb(@PathVariable("id") String id){
+    public ResponseEntity<Bulb> getBulb(@PathVariable("id") String serial){
         var bulbList = bulbService.getBulbList();
-        var bulb = bulbList.stream().filter(b -> b.getId().equals(id)).findAny();
+        var bulb = bulbList.stream().filter(b -> b.getSerial().equals(serial)).findAny();
         if(bulb.isEmpty())
         {
-            log.error(String.format("Bulb (id: %s) not found!",id));
+            log.error(String.format("Bulb (id: %s) not found!",serial));
             return new ResponseEntity(null,HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(bulb.get());

@@ -26,7 +26,7 @@ public class CommonController { // super robota
     }
 
     @GetMapping("/version")
-    public VersionDTO api() throws JsonProcessingException {
+    public VersionDTO api() {
         return new VersionDTO(mainService.getVersion());
     }
 

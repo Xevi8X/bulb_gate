@@ -2,14 +2,14 @@ package pl.edu.pw.mini.projektZPOIF.Services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.ip.udp.UnicastSendingMessageHandler;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
 
-import java.net.*;
-import java.util.Arrays;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Optional;
 
 @Slf4j
@@ -19,7 +19,7 @@ public class UdpService {
     final BulbRepository bulbRepository;
     final DatagramSocket socket;
     private InetAddress broadcast;
-    private int port;
+    private final int port;
 
 
 

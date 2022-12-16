@@ -26,7 +26,7 @@ public class BulbService {
 
     public List<Bulb> getBulbList(boolean withScan)
     {
-        if(withScan) udpService.scan();
+        if(withScan) udpService.sendSearch();
         return bulbRepository.getBulbList();
     }
 }

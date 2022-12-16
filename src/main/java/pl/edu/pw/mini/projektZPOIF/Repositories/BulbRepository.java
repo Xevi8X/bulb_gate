@@ -19,7 +19,11 @@ public class BulbRepository {
     public void addBulb(Bulb bulb)
     {
         if(bulbList == null) bulbList = new ArrayList<Bulb>();
-        if(bulbList.stream().anyMatch(b -> b.getSerial().equals(bulb.getSerial()))) return;
+        if(bulbList.stream().anyMatch(b -> b.getSerial().equals(bulb.getSerial())))
+        {
+            Bulb bulbFromList = bulbList.stream().filter(b -> b.getSerial().equals(bulb.getSerial())).findFirst().get();
+            bulbFromList.patch(bulb);
+        }
         bulbList.add(bulb);
     }
 }

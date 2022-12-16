@@ -62,6 +62,11 @@ public class Bulb {
     @Setter
     private String name;
 
+    public void patch(Bulb bulb) {
+        this.power = bulb.isPower();
+        //....
+    }
+
     public static Optional<Bulb> parser (String msg)
     {
         Bulb bulb = new Bulb();
