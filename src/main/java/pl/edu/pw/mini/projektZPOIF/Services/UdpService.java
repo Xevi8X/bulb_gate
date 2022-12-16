@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
+import java.net.*;
 
 @Slf4j
 @Service
@@ -25,12 +22,12 @@ public class UdpService {
 
 
     @Autowired
-    public UdpService(BulbRepository bulbRepository, DatagramSocket datagramSocket) {
+    public UdpService(BulbRepository bulbRepository, DatagramSocket datagramSocket){
 
         this.bulbRepository = bulbRepository;
         this.socket = datagramSocket;
         try {
-            broadcast = InetAddress.getByName("239.255.255.250");
+            broadcast = InetAddress.getByName("255.255.255.255");
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -39,9 +36,11 @@ public class UdpService {
 
     public void sendSearch()
     {
-        //MA ROZESLAC BROADCAST, poczkac na powrot komunikatu, i jesli pozgłaszaja sie zarowki to na zrobic
-
-        String searchMessage = "M-SEARCH*HTTP/1.1\r\nHOST:239:255:255:250:1982\r\nMAN:\"ssdp:discover\"\r\nST:wifi_bulb";
+        String searchMessage = """
+                M-SEARCH * HTTP/1.1\r
+                HOST: 239.255.255.250:1982\r
+                MAN: "ssdp:discover"\r
+                ST: wifi_bulb""";
         byte[] buf = searchMessage.getBytes();
         DatagramPacket packet = new DatagramPacket(buf, buf.length, broadcast, port);
         try {
