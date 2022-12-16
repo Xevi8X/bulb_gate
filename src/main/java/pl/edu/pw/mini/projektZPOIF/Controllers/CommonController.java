@@ -26,7 +26,6 @@ public class CommonController { // super robota
     }
 
     @GetMapping("/version")
-    @ResponseStatus(HttpStatus.OK)
     public VersionDTO api() throws JsonProcessingException {
         return new VersionDTO(mainService.getVersion());
     }
