@@ -1,5 +1,6 @@
 package pl.edu.pw.mini.projektZPOIF.Repositories;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.Optional;
 @Slf4j
@@ -62,11 +64,16 @@ public class Bulb {
     @Setter
     private String name;
 
+    @Getter
+    @Setter
+    @JsonIgnore
+    private Socket socket;
+
     public void patch(Bulb bulb) {
         if (bulb.getLocation() != this.location && bulb.getLocation() != null) this.location = bulb.getLocation();
-        if (!bulb.getSerial().equals(this.getSerial()) && !bulb.getSerial().isEmpty())this.serial = bulb.getSerial();
-        if (!bulb.getModel().equals(this.model) && !bulb.getModel().isEmpty()) this.model = bulb.getModel();
-        if (!bulb.getSupport().equals(this.support) && bulb.getSupport() != null) this.support = bulb.getSupport();
+        if (bulb.getSerial() != null &&!bulb.getSerial().equals(this.getSerial()) && !bulb.getSerial().isEmpty())this.serial = bulb.getSerial();
+        if (bulb.getModel() != null && !bulb.getModel().equals(this.model) && !bulb.getModel().isEmpty()) this.model = bulb.getModel();
+        if (bulb.getSupport() != null && !bulb.getSupport().equals(this.support)) this.support = bulb.getSupport();
         if (bulb.isPower() != this.power) this.power = bulb.isPower();
         if (bulb.getBright() != this.bright && bulb.getBright() != -1) this.bright = bulb.getBright();
         if (bulb.getColorMode() != this.colorMode && bulb.getColorMode() != -1)this.colorMode = bulb.getColorMode();
@@ -74,7 +81,7 @@ public class Bulb {
         if (bulb.getRgb() != this.rgb && bulb.getRgb() != -1) this.rgb = bulb.getRgb();
         if (bulb.getHue() != this.hue && bulb.getHue() != -1) this.hue = bulb.getHue();
         if (bulb.getSaturation() != this.saturation && bulb.getSaturation() != -1) this.saturation = this.getSaturation();
-        if (!bulb.getName().equals(this.getName()) && !bulb.getName().isEmpty())this.name = this.getName();
+        if (bulb.getName() != null && !bulb.getName().equals(this.getName()) && !bulb.getName().isEmpty())this.name = this.getName();
     }
 
     public static Optional<Bulb> parser (String msg)

@@ -52,7 +52,6 @@ public class UdpService {
         {
             log.error(e.getMessage());
         }
-
     }
 
     public void receiveBulb(Message message)
