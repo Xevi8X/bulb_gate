@@ -54,7 +54,6 @@ public class TcpService {
                 if (bulb.getSocket().isConnected()) return;
                 bulb.getSocket().close();
             }
-            bulb.setLocation(new InetSocketAddress("localhost",1900));
             bulb.setSocket(new Socket(bulb.getLocation().getAddress(), bulb.getLocation().getPort(),null,localPort++));
             new TCPListenerThread(bulb).start();
         } catch (IOException e) {
