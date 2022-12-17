@@ -3,7 +3,6 @@ package pl.edu.pw.mini.projektZPOIF.Services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.mini.projektZPOIF.DTO.RequestTCP;
@@ -14,9 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.concurrent.TimeoutException;
 
 @Service
 @Component
@@ -27,7 +24,7 @@ public class TcpService {
 
 
     //TODO: przeniesc do application.properties
-    int localPort = 12000;
+    int localPort = 13000;
 
 
     @Autowired
@@ -57,7 +54,7 @@ public class TcpService {
                 bulb.getSocket().close();
             }
             bulb.setSocket(new Socket(bulb.getLocation().getAddress(), bulb.getLocation().getPort(),null,localPort++));
-            bulb.getSocket().setSoTimeout(500);
+            new TCPListenerThread(bulb).start();
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -75,9 +72,7 @@ public class TcpService {
         connectToBulb(bulb);
         try
         {
-            var in = new BufferedReader(new InputStreamReader(bulb.getSocket().getInputStream()));
             var out = new PrintWriter(bulb.getSocket().getOutputStream(), true);
-
             final var requestTCP = new RequestTCP(
                     1,
                     "set_power",
@@ -88,12 +83,39 @@ public class TcpService {
             var json = objectMapper.writeValueAsString(requestTCP);
             out.write(json+"\r\n");
             out.flush();
-            while(true) System.out.println(in.readLine());
 
         }
         catch (IOException e)
         {
             log.error(e.getMessage());
         }
+    }
+
+    public class TCPListenerThread extends Thread
+    {
+        private Bulb bulb;
+
+        public TCPListenerThread(Bulb bulb)
+        {
+            this.bulb=bulb;
+        }
+
+        public void run()
+        {
+            try
+            {
+                var in = new BufferedReader(new InputStreamReader(bulb.getSocket().getInputStream()));
+                while(true)
+                {
+                    var msg = in.readLine();
+                    System.out.println(msg);
+                }
+            }
+            catch (IOException e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }
+
     }
 }

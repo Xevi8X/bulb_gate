@@ -17,6 +17,7 @@ import java.util.Optional;
 public class UdpService {
 
     final BulbRepository bulbRepository;
+    final TcpService tcpService;
     final DatagramSocket socket;
     private InetAddress broadcast;
     private final int port;
@@ -24,9 +25,10 @@ public class UdpService {
 
 
     @Autowired
-    public UdpService(BulbRepository bulbRepository, DatagramSocket datagramSocket){
+    public UdpService(BulbRepository bulbRepository, TcpService tcpService, DatagramSocket datagramSocket){
 
         this.bulbRepository = bulbRepository;
+        this.tcpService = tcpService;
         this.socket = datagramSocket;
         try {
             broadcast = InetAddress.getByName("255.255.255.255");
@@ -62,6 +64,9 @@ public class UdpService {
             log.error("Msg can not be parse\nMessage:\n{}",message);
             return;
         }
-        bulbRepository.addBulb(newBulb.get());
+        var bulb =newBulb.get();
+        tcpService.connectToBulb(bulb);
+        bulbRepository.addBulb(bulb);
+
     }
 }

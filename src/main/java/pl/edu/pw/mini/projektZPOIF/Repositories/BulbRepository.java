@@ -1,24 +1,23 @@
 package pl.edu.pw.mini.projektZPOIF.Repositories;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Slf4j
 public class BulbRepository {
 
     private List<Bulb> bulbList;
 
     public Optional<Bulb> getBulb(String id)
     {
-        if(getBulbList().stream().anyMatch(b -> b.getSerial().equals(id)))
-        {
-            Bulb bulb = getBulbList().stream().filter(b -> b.getSerial().equals(id)).findFirst().get();
-            return Optional.of(bulb);
-        }
-        return Optional.empty();
+        return getBulbList().stream().filter(b -> b.getSerial().equals(id)).findFirst();
     }
     public List<Bulb> getBulbList()
     {
@@ -28,12 +27,22 @@ public class BulbRepository {
 
     public void addBulb(Bulb bulb)
     {
-        if(bulbList == null) bulbList = new ArrayList<Bulb>();
-        if(bulbList.stream().anyMatch(b -> b.getSerial().equals(bulb.getSerial())))
-        {
-            Bulb bulbFromList = bulbList.stream().filter(b -> b.getSerial().equals(bulb.getSerial())).findFirst().get();
-            bulbFromList.patch(bulb);
+        synchronized (this) {
+            if (bulbList == null) bulbList = new ArrayList<>();
+            var bulbOpt = bulbList.stream().filter(b -> b.getSerial().equals(bulb.getSerial())).findFirst();
+            if (bulbOpt.isPresent()) {
+                Bulb bulbFromList = bulbOpt.get();
+                bulbFromList.patch(bulb);
+                try {
+                    bulb.getSocket().close();
+                }
+                catch(IOException e)
+                {
+                    log.error(e.getMessage());
+                }
+                return;
+            }
+            bulbList.add(bulb);
         }
-        bulbList.add(bulb);
     }
 }
