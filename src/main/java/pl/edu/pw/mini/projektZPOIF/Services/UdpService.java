@@ -65,8 +65,9 @@ public class UdpService {
             return;
         }
         var bulb =newBulb.get();
-        tcpService.connectToBulb(bulb);
-        bulbRepository.addBulb(bulb);
-
+        if(bulbRepository.addBulb(bulb))
+        {
+            tcpService.connectToBulb(bulb);
+        }
     }
 }

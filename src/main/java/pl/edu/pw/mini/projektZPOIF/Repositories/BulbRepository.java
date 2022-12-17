@@ -2,7 +2,9 @@ package pl.edu.pw.mini.projektZPOIF.Repositories;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import pl.edu.pw.mini.projektZPOIF.Services.TcpService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class BulbRepository {
         return bulbList;
     }
 
-    public void addBulb(Bulb bulb)
+    public boolean addBulb(Bulb bulb)
     {
         synchronized (this) {
             if (bulbList == null) bulbList = new ArrayList<>();
@@ -33,16 +35,10 @@ public class BulbRepository {
             if (bulbOpt.isPresent()) {
                 Bulb bulbFromList = bulbOpt.get();
                 bulbFromList.patch(bulb);
-                try {
-                    bulb.getSocket().close();
-                }
-                catch(IOException e)
-                {
-                    log.error(e.getMessage());
-                }
-                return;
+                return false;
             }
             bulbList.add(bulb);
+            return true;
         }
     }
 }

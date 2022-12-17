@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 @Service
@@ -53,6 +54,7 @@ public class TcpService {
                 if (bulb.getSocket().isConnected()) return;
                 bulb.getSocket().close();
             }
+            bulb.setLocation(new InetSocketAddress("localhost",1900));
             bulb.setSocket(new Socket(bulb.getLocation().getAddress(), bulb.getLocation().getPort(),null,localPort++));
             new TCPListenerThread(bulb).start();
         } catch (IOException e) {
@@ -108,6 +110,7 @@ public class TcpService {
                 while(true)
                 {
                     var msg = in.readLine();
+                    if(msg == null) break;
                     System.out.println(msg);
                 }
             }
@@ -115,6 +118,7 @@ public class TcpService {
             {
                 System.out.println(e.getMessage());
             }
+            log.debug("Thread exit!");
         }
 
     }
