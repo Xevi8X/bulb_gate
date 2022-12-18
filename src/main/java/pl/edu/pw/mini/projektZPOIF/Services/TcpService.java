@@ -3,7 +3,7 @@ package pl.edu.pw.mini.projektZPOIF.Services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.mini.projektZPOIF.DTO.RequestTCP;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
@@ -13,23 +13,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 
 @Service
-@Component
 @Slf4j
 public class TcpService {
 
     final BulbRepository bulbRepository;
-
-
-    //TODO: przeniesc do application.properties
-    int localPort = 13000;
+    private int tcpStart;
 
 
     @Autowired
-    public TcpService(pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository bulbRepository) {
+    public TcpService(BulbRepository bulbRepository, @Qualifier("getTcpStart") int tcpStart) {
+        this.tcpStart = tcpStart;
         this.bulbRepository = bulbRepository;
     }
 
@@ -54,7 +50,7 @@ public class TcpService {
                 if (bulb.getSocket().isConnected()) return;
                 bulb.getSocket().close();
             }
-            bulb.setSocket(new Socket(bulb.getLocation().getAddress(), bulb.getLocation().getPort(),null,localPort++));
+            bulb.setSocket(new Socket(bulb.getLocation().getAddress(), bulb.getLocation().getPort(),null, tcpStart++));
             new TCPListenerThread(bulb).start();
         } catch (IOException e) {
             log.error(e.getMessage());
