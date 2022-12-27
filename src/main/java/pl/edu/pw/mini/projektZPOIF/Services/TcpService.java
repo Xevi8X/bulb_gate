@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.mini.projektZPOIF.DTO.RequestTCP;
+import pl.edu.pw.mini.projektZPOIF.Exceptions.BulbNotFoundException;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
 
@@ -29,64 +30,144 @@ public class TcpService {
         this.bulbRepository = bulbRepository;
     }
 
-    public void connectToBulb(String id)
+    public void connectToBulb(Bulb bulb) throws IOException
     {
-        var bulbOptional = bulbRepository.getBulb(id);
-        if(bulbOptional.isEmpty())
+        if (bulb.getSocket() != null)
         {
-            log.error("No bulb found, serial: {}", id);
-            return;
+            if (bulb.getSocket().isConnected()) return;
+            bulb.getSocket().close();
         }
-        var bulb = bulbOptional.get();
-        connectToBulb(bulb);
-    }
-
-    public void connectToBulb(Bulb bulb)
-    {
-        try
-        {
-            if (bulb.getSocket() != null)
-            {
-                if (bulb.getSocket().isConnected()) return;
-                bulb.getSocket().close();
-            }
-            bulb.setSocket(new Socket(bulb.getLocation().getAddress(), bulb.getLocation().getPort(),null, tcpStart++));
-            new TCPListenerThread(bulb).start();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
+        bulb.setSocket(new Socket(bulb.getLocation().getAddress(), bulb.getLocation().getPort(),null, tcpStart++));
+        new TCPListenerThread(bulb).start();
     }
 
     public void bulbSetPower(String id, boolean power)
     {
-        var bulbOptional = bulbRepository.getBulb(id);
-        if(bulbOptional.isEmpty())
-        {
-            log.error("No bulb found, serial: {}", id);
-            return;
-        }
-        var bulb = bulbOptional.get();
-        connectToBulb(bulb);
+        Bulb bulb;
         try
         {
-            var out = new PrintWriter(bulb.getSocket().getOutputStream(), true);
+            bulb = bulbRepository.getBulb(id);
+        }
+        catch (BulbNotFoundException e)
+        {
+            log.error(e.getMessage());
+            return;
+        }
+
+        try
+        {
+            connectToBulb(bulb);
+        }
+        catch (IOException e)
+        {
+            log.error(e.getMessage());
+            return;
+        }
+
+        try
+        {
             final var requestTCP = new RequestTCP(
                     1,
                     "set_power",
                     power? "on": "off",
                     "smooth",
                     500);
-            ObjectMapper objectMapper = new ObjectMapper();
-            var json = objectMapper.writeValueAsString(requestTCP);
-            out.write(json+"\r\n");
-            out.flush();
-
+            sendTCPRequest(bulb, requestTCP);
         }
         catch (IOException e)
         {
             log.error(e.getMessage());
         }
     }
+
+    public void setRgb(String id, int rgb)
+    {
+        Bulb bulb;
+        try
+        {
+            bulb = bulbRepository.getBulb(id);
+        }
+        catch (BulbNotFoundException e)
+        {
+            log.error(e.getMessage());
+            return;
+        }
+
+        try
+        {
+            connectToBulb(bulb);
+        }
+        catch (IOException e)
+        {
+            log.error(e.getMessage());
+            return;
+        }
+
+        try
+        {
+            final var requestTCP = new RequestTCP(
+                    1,
+                    "set_rgb",
+                    rgb,
+                    "smooth",
+                    500);
+            sendTCPRequest(bulb, requestTCP);
+        }
+        catch (IOException e)
+        {
+            log.error(e.getMessage());
+        }
+    }
+
+    public void setBrightness(String id, byte brightness)
+    {
+        Bulb bulb;
+        try
+        {
+            bulb = bulbRepository.getBulb(id);
+        }
+        catch (BulbNotFoundException e)
+        {
+            log.error(e.getMessage());
+            return;
+        }
+
+        try
+        {
+            connectToBulb(bulb);
+        }
+        catch (IOException e)
+        {
+            log.error(e.getMessage());
+            return;
+        }
+
+        try
+        {
+            final var requestTCP = new RequestTCP(
+                    1,
+                    "set_bright",
+                    brightness,
+                    "smooth",
+                    500);
+            sendTCPRequest(bulb, requestTCP);
+        }
+        catch (IOException e)
+        {
+            log.error(e.getMessage());
+        }
+    }
+
+    private void sendTCPRequest(Bulb bulb, RequestTCP requestTCP) throws IOException
+    {
+        var out = new PrintWriter(bulb.getSocket().getOutputStream(), true);
+        ObjectMapper objectMapper = new ObjectMapper();
+        var json = objectMapper.writeValueAsString(requestTCP);
+        out.write(json+"\r\n");
+        out.flush();
+    }
+
+
 
     public class TCPListenerThread extends Thread
     {

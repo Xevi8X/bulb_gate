@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -67,7 +68,14 @@ public class UdpService {
         var bulb =newBulb.get();
         if(bulbRepository.addBulb(bulb))
         {
-            tcpService.connectToBulb(bulb);
+            try
+            {
+                tcpService.connectToBulb(bulb);
+            }
+            catch (IOException e)
+            {
+                log.error(e.getMessage());
+            }
         }
     }
 }

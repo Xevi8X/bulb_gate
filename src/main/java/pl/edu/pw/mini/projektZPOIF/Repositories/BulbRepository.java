@@ -2,11 +2,8 @@ package pl.edu.pw.mini.projektZPOIF.Repositories;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import pl.edu.pw.mini.projektZPOIF.Services.TcpService;
-
-import java.io.IOException;
+import pl.edu.pw.mini.projektZPOIF.Exceptions.BulbNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +14,18 @@ public class BulbRepository {
 
     private List<Bulb> bulbList;
 
-    public Optional<Bulb> getBulb(String id)
+    public Bulb getBulb(String id) throws BulbNotFoundException
     {
-        return getBulbList().stream().filter(b -> b.getSerial().equals(id)).findFirst();
+        Optional<Bulb> optionalBulb = getBulbList()
+                .stream()
+                .filter(b -> b.getSerial().equals(id))
+                .findFirst();
+
+        if (optionalBulb.isEmpty())
+        {
+            throw new BulbNotFoundException("Bulb with serial \" + id + \" not found");
+        }
+        return optionalBulb.get();
     }
     public List<Bulb> getBulbList()
     {
