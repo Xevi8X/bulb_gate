@@ -8,11 +8,11 @@ import org.springframework.integration.ip.udp.UnicastReceivingChannelAdapter;
 import java.net.DatagramSocket;
 
 @Configuration
-public class udpConfigs {
+public class UdpConfigs {
 
     private final UnicastReceivingChannelAdapter unicastReceivingChannelAdapter;
 
-    public udpConfigs(@Qualifier("getUdpPort") int udpPort) {
+    public UdpConfigs(@Qualifier("getUdpPort") int udpPort) {
         this.unicastReceivingChannelAdapter = new UnicastReceivingChannelAdapter(udpPort);
     }
 
