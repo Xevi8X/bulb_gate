@@ -22,7 +22,7 @@ public class BrightnessController {
         this.tcpService = tcpService;
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/brightness")
     public ResponseEntity setBrightness(
             @PathVariable("id") String serial,
             @RequestParam @Min(1) @Max(100) byte brightness)
