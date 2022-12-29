@@ -30,7 +30,7 @@ public class CommonController { // super robota
         return new VersionDTO(mainService.getVersion());
     }
 
-    @GetMapping("/test")
+    @GetMapping("/forceScan")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity test(){
         udpService.sendSearch();

@@ -3,6 +3,8 @@ package pl.edu.pw.mini.projektZPOIF.Services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
@@ -15,6 +17,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@EnableScheduling
 public class UdpService {
 
     final BulbRepository bulbRepository;
@@ -71,11 +74,19 @@ public class UdpService {
             try
             {
                 tcpService.connectToBulb(bulb);
+                log.info(String.format("New bulb found, id: %s",bulb.getSerial()));
             }
             catch (IOException e)
             {
                 log.error(e.getMessage());
             }
         }
+    }
+
+    @Scheduled(fixedDelay = 60*1000, initialDelay = 1000)
+    public void scheduleSendSearch()
+    {
+        log.info("Scheduled scan initilized!");
+        sendSearch();
     }
 }
