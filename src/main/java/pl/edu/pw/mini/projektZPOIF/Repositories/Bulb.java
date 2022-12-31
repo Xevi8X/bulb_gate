@@ -1,17 +1,15 @@
 package pl.edu.pw.mini.projektZPOIF.Repositories;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.Optional;
+
 @Slf4j
 @NoArgsConstructor
 public class Bulb {
@@ -95,53 +93,31 @@ public class Bulb {
             String[] parts = line.split(": ");
             if(parts.length != 2) continue;
 
-            switch (parts[0])
-            {
-                case "Location":
+            switch (parts[0]) {
+                case "Location" -> {
                     String[] value = parts[1].split(":");
                     try {
-                        InetSocketAddress address = new InetSocketAddress(InetAddress.getByName(value[1].substring(2)), Integer.parseInt(value[2]));
-                        bulb.location = address;
-                    }
-                    catch (Exception e)
-                    {
+                        bulb.location = new InetSocketAddress(
+                                InetAddress.getByName(value[1].substring(2)),
+                                Integer.parseInt(value[2]));
+                    } catch (Exception e) {
                         log.error(e.getMessage());
                     }
-                    break;
-                case "id":
-                    bulb.serial = parts[1];
-                    break;
-                case "model":
-                    bulb.model = parts[1];
-                    break;
-                case "support":
-                    bulb.support = parts[1].split(" ");
-                    break;
-                case "power":
-                    if(parts[1].equals("on")) bulb.setPower(true);
-                    if(parts[1].equals("off")) bulb.setPower(false);
-                    break;
-                case "bright":
-                    bulb.bright = Integer.parseInt(parts[1]);
-                    break;
-                case "color_mode":
-                    bulb.colorMode = Integer.parseInt(parts[1]);
-                    break;
-                case "ct":
-                    bulb.ct = Integer.parseInt(parts[1]);
-                    break;
-                case "rgb":
-                    bulb.rgb = Integer.parseInt(parts[1]);
-                    break;
-                case "hue":
-                    bulb.hue = Integer.parseInt(parts[1]);
-                    break;
-                case "sat":
-                    bulb.saturation = Integer.parseInt(parts[1]);
-                    break;
-                case "name":
-                    bulb.name = parts[1];
-                    break;
+                }
+                case "id" -> bulb.serial = parts[1];
+                case "model" -> bulb.model = parts[1];
+                case "support" -> bulb.support = parts[1].split(" ");
+                case "power" -> {
+                    if (parts[1].equals("on")) bulb.setPower(true);
+                    if (parts[1].equals("off")) bulb.setPower(false);
+                }
+                case "bright" -> bulb.bright = Integer.parseInt(parts[1]);
+                case "color_mode" -> bulb.colorMode = Integer.parseInt(parts[1]);
+                case "ct" -> bulb.ct = Integer.parseInt(parts[1]);
+                case "rgb" -> bulb.rgb = Integer.parseInt(parts[1]);
+                case "hue" -> bulb.hue = Integer.parseInt(parts[1]);
+                case "sat" -> bulb.saturation = Integer.parseInt(parts[1]);
+                case "name" -> bulb.name = parts[1];
             }
         }
 

@@ -1,6 +1,5 @@
 package pl.edu.pw.mini.projektZPOIF.Controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-import pl.edu.pw.mini.projektZPOIF.DTO.VersionDTO;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
-import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
 import pl.edu.pw.mini.projektZPOIF.Services.BulbService;
-
 import java.util.List;
 
 @Tag(name = "Bulb")

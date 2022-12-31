@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.mini.projektZPOIF.DTO.RequestTCP;
-import pl.edu.pw.mini.projektZPOIF.Exceptions.BulbNotFoundException;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,116 +41,69 @@ public class TcpService {
 
     public void bulbSetPower(String id, boolean power)
     {
-        Bulb bulb;
-        try
-        {
-            bulb = bulbRepository.getBulb(id);
-        }
-        catch (BulbNotFoundException e)
-        {
-            log.error(e.getMessage());
-            return;
-        }
-
-        try
-        {
-            connectToBulb(bulb);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-            return;
-        }
-
-        try
-        {
-            final var requestTCP = new RequestTCP(
-                    1,
-                    "set_power",
-                    power? "on": "off",
-                    "smooth",
-                    500);
-            sendTCPRequest(bulb, requestTCP);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
+        final var requestTCP = new RequestTCP(
+                1,
+                "set_power",
+                power? "on": "off",
+                "smooth",
+                500);
+        executeTCPRequest(id, requestTCP);
     }
 
     public void setRgb(String id, int rgb)
     {
-        Bulb bulb;
-        try
-        {
-            bulb = bulbRepository.getBulb(id);
-        }
-        catch (BulbNotFoundException e)
-        {
-            log.error(e.getMessage());
-            return;
-        }
-
-        try
-        {
-            connectToBulb(bulb);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-            return;
-        }
-
-        try
-        {
-            final var requestTCP = new RequestTCP(
-                    1,
-                    "set_rgb",
-                    rgb,
-                    "smooth",
-                    500);
-            sendTCPRequest(bulb, requestTCP);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
+        final var requestTCP = new RequestTCP(
+                1,
+                "set_rgb",
+                rgb,
+                "smooth",
+                500);
+        executeTCPRequest(id, requestTCP);
     }
 
     public void setBrightness(String id, byte brightness)
     {
-        Bulb bulb;
-        try
-        {
-            bulb = bulbRepository.getBulb(id);
-        }
-        catch (BulbNotFoundException e)
-        {
-            log.error(e.getMessage());
-            return;
-        }
+        final var requestTCP = new RequestTCP(
+                1,
+                "set_bright",
+                brightness,
+                "smooth",
+                500);
+        executeTCPRequest(id, requestTCP);
+    }
 
+    public void setHsv(String id, int hue, int saturation)
+    {
+        final var requestTCP = new RequestTCP(
+                1,
+                "set_hsv",
+                hue,
+                saturation,
+                "smooth",
+                500);
+        executeTCPRequest(id, requestTCP);
+    }
+
+    public void setTemperature(String id, int temperature)
+    {
+        final var requestTCP = new RequestTCP(
+                1,
+                "set_ct_abx",
+                temperature,
+                "smooth",
+                500);
+        executeTCPRequest(id, requestTCP);
+    }
+
+    private void executeTCPRequest(String id, RequestTCP requestTCP)
+    {
         try
         {
+            Bulb bulb = bulbRepository.getBulb(id);
             connectToBulb(bulb);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-            return;
-        }
-
-        try
-        {
-            final var requestTCP = new RequestTCP(
-                    1,
-                    "set_bright",
-                    brightness,
-                    "smooth",
-                    500);
             sendTCPRequest(bulb, requestTCP);
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             log.error(e.getMessage());
         }

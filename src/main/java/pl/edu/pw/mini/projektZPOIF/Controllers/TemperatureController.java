@@ -8,28 +8,25 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.mini.projektZPOIF.Services.TcpService;
-import pl.edu.pw.mini.projektZPOIF.Utils.ColorUtils;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-@Tag(name = "RGB")
+@Tag(name = "Temperature")
 @RestController
-public class RgbController {
+public class TemperatureController {
     final TcpService tcpService;
 
     @Autowired
-    public RgbController(TcpService tcpService) {
+    public TemperatureController(TcpService tcpService) {
         this.tcpService = tcpService;
     }
 
-    @PutMapping("/{id}/rgb")
-    public ResponseEntity setBulbRgb(
+    @PutMapping("/{id}/temperature")
+    public ResponseEntity setBulbHsv(
             @PathVariable("id") String serial,
-            @RequestParam @Min(0) @Max(255) int red,
-            @RequestParam @Min(0) @Max(255) int green,
-            @RequestParam @Min(0) @Max(255) int blue)
+            @RequestParam @Min(1700) @Max(6500) int temperature)
     {
-        tcpService.setRgb(serial, ColorUtils.toRgb(red, green, blue));
+        tcpService.setTemperature(serial, temperature);
         return ResponseEntity.ok().build();
     }
 }
