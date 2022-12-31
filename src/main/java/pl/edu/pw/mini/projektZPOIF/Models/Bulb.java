@@ -1,7 +1,6 @@
-package pl.edu.pw.mini.projektZPOIF.Repositories;
+package pl.edu.pw.mini.projektZPOIF.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,8 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.Optional;
+
+import static java.lang.Integer.parseInt;
+
 @Slf4j
 @NoArgsConstructor
 public class Bulb {
@@ -46,7 +47,7 @@ public class Bulb {
 
     @Getter
     @Setter
-    private int ct = -1;
+    private int temperature = -1;
 
     @Getter
     @Setter
@@ -77,7 +78,7 @@ public class Bulb {
         if (bulb.isPower() != this.power) this.power = bulb.isPower();
         if (bulb.getBright() != this.bright && bulb.getBright() != -1) this.bright = bulb.getBright();
         if (bulb.getColorMode() != this.colorMode && bulb.getColorMode() != -1)this.colorMode = bulb.getColorMode();
-        if (bulb.getCt() != this.ct && bulb.getCt() != -1) this.ct = bulb.getCt();
+        if (bulb.getTemperature() != this.temperature && bulb.getTemperature() != -1) this.temperature = bulb.getTemperature();
         if (bulb.getRgb() != this.rgb && bulb.getRgb() != -1) this.rgb = bulb.getRgb();
         if (bulb.getHue() != this.hue && bulb.getHue() != -1) this.hue = bulb.getHue();
         if (bulb.getSaturation() != this.saturation && bulb.getSaturation() != -1) this.saturation = this.getSaturation();
@@ -128,7 +129,7 @@ public class Bulb {
                     bulb.colorMode = Integer.parseInt(parts[1]);
                     break;
                 case "ct":
-                    bulb.ct = Integer.parseInt(parts[1]);
+                    bulb.temperature = Integer.parseInt(parts[1]);
                     break;
                 case "rgb":
                     bulb.rgb = Integer.parseInt(parts[1]);
@@ -148,5 +149,17 @@ public class Bulb {
         if(bulb.serial.isEmpty()) bulb.serial ="-1";
         if(bulb.location == null) return Optional.empty();
         return Optional.of(bulb);
+    }
+
+    public void setValueByParameter(String parameter, String value) {
+        switch (parameter) {
+            case "power" -> power = value.equals("on");
+            case "bright" -> bright = parseInt(value);
+            case "ct" -> temperature = parseInt(value);
+            case "rgb" -> rgb = parseInt(value);
+            case "hue" -> hue = parseInt(value);
+            case "sat" -> saturation = parseInt(value);
+            // case "color_mode":
+        }
     }
 }

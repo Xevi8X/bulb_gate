@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.mini.projektZPOIF.DTO.RequestTCP;
 import pl.edu.pw.mini.projektZPOIF.Exceptions.BulbNotFoundException;
-import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
+import pl.edu.pw.mini.projektZPOIF.Models.Bulb;
+import pl.edu.pw.mini.projektZPOIF.Models.BulbResponse;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
 
 import java.io.BufferedReader;
@@ -172,10 +173,11 @@ public class TcpService {
     public class TCPListenerThread extends Thread
     {
         private Bulb bulb;
+        private final ObjectMapper objectMapper = new ObjectMapper();
 
         public TCPListenerThread(Bulb bulb)
         {
-            this.bulb=bulb;
+            this.bulb = bulb;
         }
 
         public void run()
@@ -188,6 +190,11 @@ public class TcpService {
                     var msg = in.readLine();
                     if(msg == null) break;
                     System.out.println(msg);
+                    BulbResponse bulbResponse = objectMapper.readValue(msg, BulbResponse.class);
+                    if (bulbResponse.isNotification())
+                    {
+                        bulbResponse.getParams().forEach(bulb::setValueByParameter);
+                    }
                 }
             }
             catch (IOException e)

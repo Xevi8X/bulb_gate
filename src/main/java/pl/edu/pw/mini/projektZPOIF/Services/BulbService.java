@@ -2,7 +2,7 @@ package pl.edu.pw.mini.projektZPOIF.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
+import pl.edu.pw.mini.projektZPOIF.Models.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
 
 import java.util.List;

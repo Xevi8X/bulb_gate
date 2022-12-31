@@ -4,6 +4,8 @@ package pl.edu.pw.mini.projektZPOIF.Repositories;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import pl.edu.pw.mini.projektZPOIF.Exceptions.BulbNotFoundException;
+import pl.edu.pw.mini.projektZPOIF.Models.Bulb;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
