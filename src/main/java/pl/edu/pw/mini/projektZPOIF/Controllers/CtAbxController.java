@@ -14,7 +14,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.Optional;
 
-@Tag(name = "CT_ABX")
+@Tag(name = "Light temperature")
 @RestController
 public class CtAbxController {
     final TcpService tcpService;

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -22,7 +23,6 @@ public class TcpService {
 
     final BulbRepository bulbRepository;
     private int tcpStart;
-
     final ObjectMapper objectMapper;
 
 
@@ -166,7 +166,7 @@ public class TcpService {
             else {
                 requestTCP = new RequestTCP(
                         1,
-                        "set_bright",
+                        "set_ct_abx",
                         ct_value,
                         "sudden",0);
             }
@@ -192,7 +192,7 @@ public class TcpService {
             if(changingTimeInMillis > 0) {
                 requestTCP = new RequestTCP(
                         1,
-                        "set_bright",
+                        "set_hsv",
                         hue,
                         sat,
                         "smooth",
@@ -201,7 +201,7 @@ public class TcpService {
             else {
                 requestTCP = new RequestTCP(
                         1,
-                        "set_bright",
+                        "set_hsv",
                         hue,
                         sat,
                         "sudden",0);
@@ -246,6 +246,11 @@ public class TcpService {
                 {
                     var msg = in.readLine();
                     if(msg == null) break;
+                    /*Map<String,Object> json = objectMapper.readValue(msg, Map.class);
+                    if(json.get("method").equals("props"))
+                    {
+                        Map<String,Object> params = (Map<String, Object>) json.get("params");
+                    }*/
                     System.out.println(msg);
                 }
             }
