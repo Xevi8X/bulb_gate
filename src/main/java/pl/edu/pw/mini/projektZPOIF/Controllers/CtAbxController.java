@@ -14,26 +14,24 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.Optional;
 
-@Tag(name = "RGB")
+@Tag(name = "CT_ABX")
 @RestController
-public class RgbController {
+public class CtAbxController {
     final TcpService tcpService;
 
     @Autowired
-    public RgbController(TcpService tcpService) {
+    public CtAbxController(TcpService tcpService) {
         this.tcpService = tcpService;
     }
 
-    @PutMapping("/{id}/rgb")
+    @PutMapping("/{id}/ct_abx")
     public ResponseEntity setBulbRgb(
             @PathVariable("id") String serial,
-            @RequestParam @Min(0) @Max(255) int red,
-            @RequestParam @Min(0) @Max(255) int green,
-            @RequestParam @Min(0) @Max(255) int blue,
+            @RequestParam @Min(1700) @Max(6500) int ct_value,
             @RequestParam(required = false) Optional<Integer> changingTimeInMillis)
 
     {
-        tcpService.setRgb(serial, ColorUtils.toRgb(red, green, blue),changingTimeInMillis.orElse(0));
+        tcpService.setCtAbx(serial, ct_value,changingTimeInMillis.orElse(0));
         return ResponseEntity.ok().build();
     }
 }

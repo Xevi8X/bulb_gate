@@ -26,9 +26,9 @@ public class PowerController {
     @PutMapping("/{id}")
     public ResponseEntity getBulb(@PathVariable("id") String serial,
                                   @RequestParam boolean power,
-                                  @RequestParam(required = false) Optional<Integer> chagingTimeInMillis)
+                                  @RequestParam(required = false) Optional<Integer> changingTimeInMillis)
     {
-        tcpService.bulbSetPower(serial,power,chagingTimeInMillis.orElse(0));
+        tcpService.bulbSetPower(serial,power,changingTimeInMillis.orElse(0));
         return ResponseEntity.ok().build();
     }
 }

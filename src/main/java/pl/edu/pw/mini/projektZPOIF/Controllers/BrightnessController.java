@@ -27,9 +27,9 @@ public class BrightnessController {
     public ResponseEntity setBrightness(
             @PathVariable("id") String serial,
             @RequestParam @Min(1) @Max(100) byte brightness,
-            @RequestParam(required = false) Optional<Integer> chagingTimeInMillis)
+            @RequestParam(required = false) Optional<Integer> changingTimeInMillis)
     {
-        tcpService.setBrightness(serial, brightness,chagingTimeInMillis.orElse(0));
+        tcpService.setBrightness(serial, brightness,changingTimeInMillis.orElse(0));
         return ResponseEntity.ok().build();
     }
 }

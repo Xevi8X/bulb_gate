@@ -148,6 +148,76 @@ public class TcpService {
         }
     }
 
+    public void setCtAbx(String id, int ct_value, int changingTimeInMillis)
+    {
+        try
+        {
+            Bulb bulb = bulbRepository.getBulb(id);
+            connectToBulb(bulb);
+            RequestTCP requestTCP;
+            if(changingTimeInMillis > 0) {
+                requestTCP = new RequestTCP(
+                        1,
+                        "set_ct_abx",
+                        ct_value,
+                        "smooth",
+                        changingTimeInMillis);
+            }
+            else {
+                requestTCP = new RequestTCP(
+                        1,
+                        "set_bright",
+                        ct_value,
+                        "sudden",0);
+            }
+            sendTCPRequest(bulb, requestTCP);
+        }
+        catch (BulbNotFoundException e)
+        {
+            log.error(e.getMessage());
+        }
+        catch (IOException e)
+        {
+            log.error(e.getMessage());
+        }
+    }
+
+    public void setHsv(String id, int hue, int sat, int changingTimeInMillis)
+    {
+        try
+        {
+            Bulb bulb = bulbRepository.getBulb(id);
+            connectToBulb(bulb);
+            RequestTCP requestTCP;
+            if(changingTimeInMillis > 0) {
+                requestTCP = new RequestTCP(
+                        1,
+                        "set_bright",
+                        hue,
+                        sat,
+                        "smooth",
+                        changingTimeInMillis);
+            }
+            else {
+                requestTCP = new RequestTCP(
+                        1,
+                        "set_bright",
+                        hue,
+                        sat,
+                        "sudden",0);
+            }
+            sendTCPRequest(bulb, requestTCP);
+        }
+        catch (BulbNotFoundException e)
+        {
+            log.error(e.getMessage());
+        }
+        catch (IOException e)
+        {
+            log.error(e.getMessage());
+        }
+    }
+
     private void sendTCPRequest(Bulb bulb, RequestTCP requestTCP) throws IOException
     {
         var out = new PrintWriter(bulb.getSocket().getOutputStream(), true);

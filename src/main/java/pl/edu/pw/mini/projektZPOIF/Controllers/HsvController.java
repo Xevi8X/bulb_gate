@@ -14,26 +14,25 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.Optional;
 
-@Tag(name = "RGB")
+@Tag(name = "HSV")
 @RestController
-public class RgbController {
+public class HsvController {
     final TcpService tcpService;
 
     @Autowired
-    public RgbController(TcpService tcpService) {
+    public HsvController(TcpService tcpService) {
         this.tcpService = tcpService;
     }
 
-    @PutMapping("/{id}/rgb")
-    public ResponseEntity setBulbRgb(
+    @PutMapping("/{id}/hsv")
+    public ResponseEntity setBulbHsv(
             @PathVariable("id") String serial,
-            @RequestParam @Min(0) @Max(255) int red,
-            @RequestParam @Min(0) @Max(255) int green,
-            @RequestParam @Min(0) @Max(255) int blue,
+            @RequestParam @Min(0) @Max(359) int hue,
+            @RequestParam @Min(0) @Max(100) int sat,
             @RequestParam(required = false) Optional<Integer> changingTimeInMillis)
 
     {
-        tcpService.setRgb(serial, ColorUtils.toRgb(red, green, blue),changingTimeInMillis.orElse(0));
+        tcpService.setHsv(serial, hue, sat,changingTimeInMillis.orElse(0));
         return ResponseEntity.ok().build();
     }
 }
