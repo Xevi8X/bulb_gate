@@ -49,6 +49,10 @@ public class TcpService {
         try
         {
             Bulb bulb = bulbRepository.getBulb(id);
+            if (!bulb.supports("set_power"))
+            {
+                return;
+            }
             connectToBulb(bulb);
             RequestTCP requestTCP;
             if(changingTimeInMillis > 0) {
@@ -84,6 +88,10 @@ public class TcpService {
         try
         {
             Bulb bulb = bulbRepository.getBulb(id);
+            if (!bulb.supports("set_rgb"))
+            {
+                return;
+            }
             connectToBulb(bulb);
             RequestTCP requestTCP;
             if(changingTimeInMillis > 0) {
@@ -119,6 +127,10 @@ public class TcpService {
         try
         {
             Bulb bulb = bulbRepository.getBulb(id);
+            if (!bulb.supports("set_bright"))
+            {
+                return;
+            }
             connectToBulb(bulb);
             RequestTCP requestTCP;
             if(changingTimeInMillis > 0) {
@@ -153,6 +165,10 @@ public class TcpService {
         try
         {
             Bulb bulb = bulbRepository.getBulb(id);
+            if (!bulb.supports("set_ct_abx"))
+            {
+                return;
+            }
             connectToBulb(bulb);
             RequestTCP requestTCP;
             if(changingTimeInMillis > 0) {
@@ -187,6 +203,10 @@ public class TcpService {
         try
         {
             Bulb bulb = bulbRepository.getBulb(id);
+            if (!bulb.supports("set_hsv"))
+            {
+                return;
+            }
             connectToBulb(bulb);
             RequestTCP requestTCP;
             if(changingTimeInMillis > 0) {

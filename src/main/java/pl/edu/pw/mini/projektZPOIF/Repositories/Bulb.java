@@ -84,6 +84,11 @@ public class Bulb {
         if (bulb.getName() != null && !bulb.getName().equals(this.getName()) && !bulb.getName().isEmpty())this.name = this.getName();
     }
 
+    public boolean supports(String functionality)
+    {
+        return Arrays.asList(support).contains(functionality);
+    }
+
     public static Optional<Bulb> parser (String msg)
     {
         Bulb bulb = new Bulb();
