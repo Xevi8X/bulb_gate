@@ -154,4 +154,36 @@ public class Bulb {
         if(bulb.location == null) return Optional.empty();
         return Optional.of(bulb);
     }
+
+    public void patch(String key, Object value) {
+        switch (key)
+        {
+            case "power":
+                if(value.equals("on")) setPower(true);
+                if(value.equals("off")) setPower(false);
+                break;
+            case "bright":
+                setBright((int) value);
+                break;
+            case "ct":
+                setCt((int) value);
+                break;
+            case "rgb":
+                setRgb((int) value);
+                break;
+            case "hue":
+                setHue((int) value);
+                break;
+            case "sat":
+                setSaturation((int) value);
+                break;
+            case "color_mode":
+                setColorMode((int) value);
+                break;
+            case "name":
+                setName(value.toString());
+                break;
+        }
+
+    }
 }

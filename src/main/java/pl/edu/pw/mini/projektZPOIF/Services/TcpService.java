@@ -246,8 +246,6 @@ public class TcpService {
         out.flush();
     }
 
-
-
     public class TCPListenerThread extends Thread
     {
         private final Bulb bulb;
@@ -266,12 +264,15 @@ public class TcpService {
                 {
                     var msg = in.readLine();
                     if(msg == null) break;
-                    /*Map<String,Object> json = objectMapper.readValue(msg, Map.class);
-                    if(json.get("method").equals("props"))
+                    Map<String,Object> json = objectMapper.readValue(msg, Map.class);
+                    if(json.containsKey("method") && json.get("method").equals("props"))
                     {
                         Map<String,Object> params = (Map<String, Object>) json.get("params");
-                    }*/
-                    System.out.println(msg);
+                        for (var entry : params.entrySet()) {
+                            bulb.patch(entry.getKey(),entry.getValue());
+                        }
+                    }
+                    //System.out.println(msg);
                 }
             }
             catch (IOException e)
