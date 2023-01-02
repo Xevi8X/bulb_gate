@@ -23,11 +23,14 @@ public class TcpService {
     final BulbRepository bulbRepository;
     private int tcpStart;
 
+    final ObjectMapper objectMapper;
+
 
     @Autowired
-    public TcpService(BulbRepository bulbRepository, @Qualifier("getTcpStart") int tcpStart) {
+    public TcpService(BulbRepository bulbRepository, @Qualifier("getTcpStart") int tcpStart, ObjectMapper objectMapper) {
         this.tcpStart = tcpStart;
         this.bulbRepository = bulbRepository;
+        this.objectMapper = objectMapper;
     }
 
     public void connectToBulb(Bulb bulb) throws IOException
@@ -41,38 +44,34 @@ public class TcpService {
         new TCPListenerThread(bulb).start();
     }
 
-    public void bulbSetPower(String id, boolean power)
+    public void bulbSetPower(String id, boolean power, int changingTimeInMillis)
     {
-        Bulb bulb;
         try
         {
-            bulb = bulbRepository.getBulb(id);
+            Bulb bulb = bulbRepository.getBulb(id);
+            connectToBulb(bulb);
+            RequestTCP requestTCP;
+            if(changingTimeInMillis > 0) {
+                requestTCP = new RequestTCP(
+                        1,
+                        "set_power",
+                        power ? "on" : "off",
+                        "smooth",
+                        changingTimeInMillis);
+            }
+            else
+            {
+                requestTCP = new RequestTCP(
+                        1,
+                        "set_power",
+                        power ? "on" : "off",
+                        "sudden",0);
+            }
+            sendTCPRequest(bulb, requestTCP);
         }
         catch (BulbNotFoundException e)
         {
             log.error(e.getMessage());
-            return;
-        }
-
-        try
-        {
-            connectToBulb(bulb);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-            return;
-        }
-
-        try
-        {
-            final var requestTCP = new RequestTCP(
-                    1,
-                    "set_power",
-                    power? "on": "off",
-                    "smooth",
-                    500);
-            sendTCPRequest(bulb, requestTCP);
         }
         catch (IOException e)
         {
@@ -80,38 +79,34 @@ public class TcpService {
         }
     }
 
-    public void setRgb(String id, int rgb)
+    public void setRgb(String id, int rgb, int changingTimeInMillis)
     {
-        Bulb bulb;
         try
         {
-            bulb = bulbRepository.getBulb(id);
+            Bulb bulb = bulbRepository.getBulb(id);
+            connectToBulb(bulb);
+            RequestTCP requestTCP;
+            if(changingTimeInMillis > 0) {
+                requestTCP = new RequestTCP(
+                        1,
+                        "set_rgb",
+                        rgb,
+                        "smooth",
+                        changingTimeInMillis);
+            }
+            else
+            {
+                requestTCP = new RequestTCP(
+                        1,
+                        "set_rgb",
+                        rgb,
+                        "sudden",0);
+            }
+            sendTCPRequest(bulb, requestTCP);
         }
         catch (BulbNotFoundException e)
         {
             log.error(e.getMessage());
-            return;
-        }
-
-        try
-        {
-            connectToBulb(bulb);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-            return;
-        }
-
-        try
-        {
-            final var requestTCP = new RequestTCP(
-                    1,
-                    "set_rgb",
-                    rgb,
-                    "smooth",
-                    500);
-            sendTCPRequest(bulb, requestTCP);
         }
         catch (IOException e)
         {
@@ -119,38 +114,33 @@ public class TcpService {
         }
     }
 
-    public void setBrightness(String id, byte brightness)
+    public void setBrightness(String id, byte brightness, int changingTimeInMillis)
     {
-        Bulb bulb;
         try
         {
-            bulb = bulbRepository.getBulb(id);
+            Bulb bulb = bulbRepository.getBulb(id);
+            connectToBulb(bulb);
+            RequestTCP requestTCP;
+            if(changingTimeInMillis > 0) {
+                requestTCP = new RequestTCP(
+                        1,
+                        "set_bright",
+                        brightness,
+                        "smooth",
+                        changingTimeInMillis);
+            }
+            else {
+                requestTCP = new RequestTCP(
+                        1,
+                        "set_bright",
+                        brightness,
+                        "sudden",0);
+            }
+            sendTCPRequest(bulb, requestTCP);
         }
         catch (BulbNotFoundException e)
         {
             log.error(e.getMessage());
-            return;
-        }
-
-        try
-        {
-            connectToBulb(bulb);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-            return;
-        }
-
-        try
-        {
-            final var requestTCP = new RequestTCP(
-                    1,
-                    "set_bright",
-                    brightness,
-                    "smooth",
-                    500);
-            sendTCPRequest(bulb, requestTCP);
         }
         catch (IOException e)
         {
@@ -161,7 +151,6 @@ public class TcpService {
     private void sendTCPRequest(Bulb bulb, RequestTCP requestTCP) throws IOException
     {
         var out = new PrintWriter(bulb.getSocket().getOutputStream(), true);
-        ObjectMapper objectMapper = new ObjectMapper();
         var json = objectMapper.writeValueAsString(requestTCP);
         out.write(json+"\r\n");
         out.flush();
@@ -171,7 +160,7 @@ public class TcpService {
 
     public class TCPListenerThread extends Thread
     {
-        private Bulb bulb;
+        private final Bulb bulb;
 
         public TCPListenerThread(Bulb bulb)
         {

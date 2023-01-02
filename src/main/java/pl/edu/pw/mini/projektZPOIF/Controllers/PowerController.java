@@ -23,7 +23,7 @@ public class PowerController {
 
     @PutMapping("/{id}")
     public ResponseEntity getBulb(@PathVariable("id") String serial, @RequestParam boolean power){
-        tcpService.bulbSetPower(serial,power);
+        tcpService.bulbSetPower(serial,power,0);
         return ResponseEntity.ok().build();
     }
 }

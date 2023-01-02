@@ -12,6 +12,7 @@ import pl.edu.pw.mini.projektZPOIF.Utils.ColorUtils;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.Optional;
 
 @Tag(name = "RGB")
 @RestController
@@ -29,8 +30,9 @@ public class RgbController {
             @RequestParam @Min(0) @Max(255) int red,
             @RequestParam @Min(0) @Max(255) int green,
             @RequestParam @Min(0) @Max(255) int blue)
+
     {
-        tcpService.setRgb(serial, ColorUtils.toRgb(red, green, blue));
+        tcpService.setRgb(serial, ColorUtils.toRgb(red, green, blue),0);
         return ResponseEntity.ok().build();
     }
 }
