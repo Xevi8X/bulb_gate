@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Services.TcpService;
 
+import java.util.Optional;
+
 @Tag(name = "Power")
 @RestController
 @Slf4j
@@ -22,8 +24,11 @@ public class PowerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity getBulb(@PathVariable("id") String serial, @RequestParam boolean power){
-        tcpService.bulbSetPower(serial,power,0);
+    public ResponseEntity getBulb(@PathVariable("id") String serial,
+                                  @RequestParam boolean power,
+                                  @RequestParam(required = false) Optional<Integer> chagingTimeInMillis)
+    {
+        tcpService.bulbSetPower(serial,power,chagingTimeInMillis.orElse(0));
         return ResponseEntity.ok().build();
     }
 }

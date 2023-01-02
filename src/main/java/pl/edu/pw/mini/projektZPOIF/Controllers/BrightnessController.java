@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.mini.projektZPOIF.Services.TcpService;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.Optional;
 
 @Tag(name= "Brightness")
 @RestController
@@ -25,9 +26,10 @@ public class BrightnessController {
     @PutMapping("/{id}/brightness")
     public ResponseEntity setBrightness(
             @PathVariable("id") String serial,
-            @RequestParam @Min(1) @Max(100) byte brightness)
+            @RequestParam @Min(1) @Max(100) byte brightness,
+            @RequestParam(required = false) Optional<Integer> chagingTimeInMillis)
     {
-        tcpService.setBrightness(serial, brightness,0);
+        tcpService.setBrightness(serial, brightness,chagingTimeInMillis.orElse(0));
         return ResponseEntity.ok().build();
     }
 }

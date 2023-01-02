@@ -29,10 +29,11 @@ public class RgbController {
             @PathVariable("id") String serial,
             @RequestParam @Min(0) @Max(255) int red,
             @RequestParam @Min(0) @Max(255) int green,
-            @RequestParam @Min(0) @Max(255) int blue)
+            @RequestParam @Min(0) @Max(255) int blue,
+            @RequestParam(required = false) Optional<Integer> chagingTimeInMillis)
 
     {
-        tcpService.setRgb(serial, ColorUtils.toRgb(red, green, blue),0);
+        tcpService.setRgb(serial, ColorUtils.toRgb(red, green, blue),chagingTimeInMillis.orElse(0));
         return ResponseEntity.ok().build();
     }
 }
