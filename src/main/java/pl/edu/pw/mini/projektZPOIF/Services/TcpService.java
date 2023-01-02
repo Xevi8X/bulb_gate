@@ -9,7 +9,6 @@ import pl.edu.pw.mini.projektZPOIF.DTO.RequestTCP;
 import pl.edu.pw.mini.projektZPOIF.Exceptions.BulbNotFoundException;
 import pl.edu.pw.mini.projektZPOIF.Repositories.Bulb;
 import pl.edu.pw.mini.projektZPOIF.Repositories.BulbRepository;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,186 +45,70 @@ public class TcpService {
 
     public void bulbSetPower(String id, boolean power, int changingTimeInMillis)
     {
-        try
-        {
-            Bulb bulb = bulbRepository.getBulb(id);
-            if (!bulb.supports("set_power"))
-            {
-                return;
-            }
-            connectToBulb(bulb);
-            RequestTCP requestTCP;
-            if(changingTimeInMillis > 0) {
-                requestTCP = new RequestTCP(
-                        1,
-                        "set_power",
-                        power ? "on" : "off",
-                        "smooth",
-                        changingTimeInMillis);
-            }
-            else
-            {
-                requestTCP = new RequestTCP(
-                        1,
-                        "set_power",
-                        power ? "on" : "off",
-                        "sudden",0);
-            }
-            sendTCPRequest(bulb, requestTCP);
-        }
-        catch (BulbNotFoundException e)
-        {
-            log.error(e.getMessage());
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
+        RequestTCP requestTCP = new RequestTCP(
+                1,
+                "set_power",
+                power ? "on" : "off",
+                changingTimeInMillis >= 30 ? "smooth" : "sudden",
+                changingTimeInMillis);
+        executeTCPRequest(id, requestTCP);
     }
 
     public void setRgb(String id, int rgb, int changingTimeInMillis)
     {
-        try
-        {
-            Bulb bulb = bulbRepository.getBulb(id);
-            if (!bulb.supports("set_rgb"))
-            {
-                return;
-            }
-            connectToBulb(bulb);
-            RequestTCP requestTCP;
-            if(changingTimeInMillis > 0) {
-                requestTCP = new RequestTCP(
-                        1,
-                        "set_rgb",
-                        rgb,
-                        "smooth",
-                        changingTimeInMillis);
-            }
-            else
-            {
-                requestTCP = new RequestTCP(
-                        1,
-                        "set_rgb",
-                        rgb,
-                        "sudden",0);
-            }
-            sendTCPRequest(bulb, requestTCP);
-        }
-        catch (BulbNotFoundException e)
-        {
-            log.error(e.getMessage());
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
+        RequestTCP requestTCP = new RequestTCP(
+                1,
+                "set_rgb",
+                rgb,
+                changingTimeInMillis >= 30 ? "smooth" : "sudden",
+                changingTimeInMillis);
+        executeTCPRequest(id, requestTCP);
     }
 
     public void setBrightness(String id, byte brightness, int changingTimeInMillis)
     {
-        try
-        {
-            Bulb bulb = bulbRepository.getBulb(id);
-            if (!bulb.supports("set_bright"))
-            {
-                return;
-            }
-            connectToBulb(bulb);
-            RequestTCP requestTCP;
-            if(changingTimeInMillis > 0) {
-                requestTCP = new RequestTCP(
-                        1,
-                        "set_bright",
-                        brightness,
-                        "smooth",
-                        changingTimeInMillis);
-            }
-            else {
-                requestTCP = new RequestTCP(
-                        1,
-                        "set_bright",
-                        brightness,
-                        "sudden",0);
-            }
-            sendTCPRequest(bulb, requestTCP);
-        }
-        catch (BulbNotFoundException e)
-        {
-            log.error(e.getMessage());
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
+        RequestTCP requestTCP = new RequestTCP(
+                1,
+                "set_bright",
+                brightness,
+                changingTimeInMillis >= 30 ? "smooth" : "sudden",
+                changingTimeInMillis);
+        executeTCPRequest(id, requestTCP);
     }
 
     public void setCtAbx(String id, int ct_value, int changingTimeInMillis)
     {
-        try
-        {
-            Bulb bulb = bulbRepository.getBulb(id);
-            if (!bulb.supports("set_ct_abx"))
-            {
-                return;
-            }
-            connectToBulb(bulb);
-            RequestTCP requestTCP;
-            if(changingTimeInMillis > 0) {
-                requestTCP = new RequestTCP(
-                        1,
-                        "set_ct_abx",
-                        ct_value,
-                        "smooth",
-                        changingTimeInMillis);
-            }
-            else {
-                requestTCP = new RequestTCP(
-                        1,
-                        "set_ct_abx",
-                        ct_value,
-                        "sudden",0);
-            }
-            sendTCPRequest(bulb, requestTCP);
-        }
-        catch (BulbNotFoundException e)
-        {
-            log.error(e.getMessage());
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
+        RequestTCP requestTCP = new RequestTCP(
+                1,
+                "set_ct_abx",
+                ct_value,
+                changingTimeInMillis >= 30 ? "smooth" : "sudden",
+                changingTimeInMillis);
+        executeTCPRequest(id, requestTCP);
     }
 
     public void setHsv(String id, int hue, int sat, int changingTimeInMillis)
     {
+        RequestTCP requestTCP = new RequestTCP(
+                1,
+                "set_hsv",
+                hue,
+                sat,
+                changingTimeInMillis >= 30 ? "smooth" : "sudden",
+                changingTimeInMillis);
+        executeTCPRequest(id, requestTCP);
+    }
+
+    private void executeTCPRequest(String id, RequestTCP requestTCP)
+    {
         try
         {
             Bulb bulb = bulbRepository.getBulb(id);
-            if (!bulb.supports("set_hsv"))
+            if (!bulb.supports(requestTCP.method))
             {
                 return;
             }
             connectToBulb(bulb);
-            RequestTCP requestTCP;
-            if(changingTimeInMillis > 0) {
-                requestTCP = new RequestTCP(
-                        1,
-                        "set_hsv",
-                        hue,
-                        sat,
-                        "smooth",
-                        changingTimeInMillis);
-            }
-            else {
-                requestTCP = new RequestTCP(
-                        1,
-                        "set_hsv",
-                        hue,
-                        sat,
-                        "sudden",0);
-            }
             sendTCPRequest(bulb, requestTCP);
         }
         catch (BulbNotFoundException e)
@@ -252,7 +135,7 @@ public class TcpService {
 
         public TCPListenerThread(Bulb bulb)
         {
-            this.bulb=bulb;
+            this.bulb = bulb;
         }
 
         public void run()

@@ -1,6 +1,5 @@
 package pl.edu.pw.mini.projektZPOIF.Controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,7 @@ import pl.edu.pw.mini.projektZPOIF.Services.UdpService;
 
 @Tag(name = "Common")
 @RestController
-public class CommonController { // super robota
+public class CommonController {
 
     final MainService mainService;
     final UdpService udpService;
@@ -32,7 +31,7 @@ public class CommonController { // super robota
 
     @GetMapping("/forceScan")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity test(){
+    public ResponseEntity searchForBulbs(){
         udpService.sendSearch();
         return ResponseEntity.ok().build();
     }
