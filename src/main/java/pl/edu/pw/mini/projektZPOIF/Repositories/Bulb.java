@@ -69,18 +69,17 @@ public class Bulb {
     private Socket socket;
 
     public void patch(Bulb bulb) {
-        if (bulb.getLocation() != this.location && bulb.getLocation() != null) this.location = bulb.getLocation();
-        if (bulb.getSerial() != null &&!bulb.getSerial().equals(this.getSerial()) && !bulb.getSerial().isEmpty())this.serial = bulb.getSerial();
-        if (bulb.getModel() != null && !bulb.getModel().equals(this.model) && !bulb.getModel().isEmpty()) this.model = bulb.getModel();
-        if (bulb.getSupport() != null && !bulb.getSupport().equals(this.support)) this.support = bulb.getSupport();
+        if (bulb.getLocation() != null) this.location = bulb.getLocation();
+        if (bulb.getModel() != null) this.model = bulb.getModel();
+        if (bulb.getSupport() != null && bulb.getSupport().length != 0) this.support = bulb.getSupport();
         if (bulb.isPower() != this.power) this.power = bulb.isPower();
         if (bulb.getBright() != this.bright && bulb.getBright() != -1) this.bright = bulb.getBright();
-        if (bulb.getColorMode() != this.colorMode && bulb.getColorMode() != -1)this.colorMode = bulb.getColorMode();
+        if (bulb.getColorMode() != this.colorMode && bulb.getColorMode() != -1) this.colorMode = bulb.getColorMode();
         if (bulb.getCt() != this.ct && bulb.getCt() != -1) this.ct = bulb.getCt();
         if (bulb.getRgb() != this.rgb && bulb.getRgb() != -1) this.rgb = bulb.getRgb();
         if (bulb.getHue() != this.hue && bulb.getHue() != -1) this.hue = bulb.getHue();
         if (bulb.getSaturation() != this.saturation && bulb.getSaturation() != -1) this.saturation = this.getSaturation();
-        if (bulb.getName() != null && !bulb.getName().equals(this.getName()) && !bulb.getName().isEmpty())this.name = this.getName();
+        if (bulb.getName() != null && !bulb.getName().isEmpty()) this.name = this.getName();
     }
 
     public boolean supports(String functionality)
