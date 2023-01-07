@@ -103,8 +103,7 @@ public class Bulb {
                 case "Location" -> {
                     String[] value = parts[1].split(":");
                     try {
-                        InetSocketAddress address = new InetSocketAddress(InetAddress.getByName(value[1].substring(2)), Integer.parseInt(value[2]));
-                        bulb.location = address;
+                        bulb.location = new InetSocketAddress(InetAddress.getByName(value[1].substring(2)), Integer.parseInt(value[2]));
                     } catch (Exception e) {
                         log.error(e.getMessage());
                     }
