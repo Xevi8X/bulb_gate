@@ -11,7 +11,6 @@ import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.SocketUtils;
 import pl.edu.pw.mini.projektZPOIF.DTO.RequestTCP;
 import pl.edu.pw.mini.projektZPOIF.Utils.ColorUtils;
 
@@ -54,7 +53,6 @@ public class FFTService {
         {
             this.serial = serial;
             this.url = url;
-            //this.url = "https://www.gella.com.ru/~ev/dbx_test/wav/65%20-%20Electric%20guitar%20-%20clean%20sound%20(mono).wav";
         }
 
         public void run()
@@ -90,7 +88,7 @@ public class FFTService {
         void thread_func()
         {
             log.info("Starting music mode!");
-            AudioInputStream din = null;
+            AudioInputStream din;
             FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
             try {
                 AudioInputStream in = AudioSystem.getAudioInputStream(new URL(url));
@@ -137,7 +135,6 @@ public class FFTService {
                     "set_rgb",
                     ColorUtils.toRgb(res.getLeft(), res.getMiddle(), res.getRight()),
                     "sudden",0);
-            //System.out.println(res);
             RequestTCP requestTCP2 = new RequestTCP(
                     1,
                     "set_bright",
@@ -145,7 +142,7 @@ public class FFTService {
                     "sudden",0);
             try
             {
-                String json = null,json2 = null;
+                String json,json2;
                 json = objectMapper.writeValueAsString(requestTCP1);
                 json2 = objectMapper.writeValueAsString(requestTCP2);
                 out.write(json+"\r\n"+json2+"\r\n");
