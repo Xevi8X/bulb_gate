@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 @Service
@@ -109,6 +110,26 @@ public class TcpService {
         executeTCPRequest(id, requestTCP);
     }
 
+    public void setMusic(String id, int port, boolean power) {
+        String hostIP = null;
+        try {
+            hostIP = InetAddress.getLocalHost().getHostAddress();
+        }
+        catch (UnknownHostException e)
+        {
+            e.printStackTrace();
+            return;
+        }
+
+            RequestTCP requestTCP = new RequestTCP(
+                    1,
+                    "set_music",
+                    power ? 1 : 0,
+                    hostIP,
+                    port);
+            executeTCPRequest(id, requestTCP);
+    }
+
     private void executeTCPRequest(String id, RequestTCP requestTCP)
     {
         try
@@ -119,32 +140,6 @@ public class TcpService {
                 return;
             }
             connectToBulb(bulb);
-            sendTCPRequest(bulb, requestTCP);
-        }
-        catch (BulbNotFoundException e)
-        {
-            log.error(e.getMessage());
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
-    }
-
-    public void setMusic(String id, int port,boolean power)
-    {
-        try {
-            Bulb bulb = bulbRepository.getBulb(id);
-            if (!bulb.supports("set_music")) {
-                return;
-            }
-            connectToBulb(bulb);
-            RequestTCP requestTCP = new RequestTCP(
-                    1,
-                    "set_music",
-                    power? 1 : 0,
-                    InetAddress.getLocalHost().getHostAddress(),
-                    port);
             sendTCPRequest(bulb, requestTCP);
         }
         catch (BulbNotFoundException e)
