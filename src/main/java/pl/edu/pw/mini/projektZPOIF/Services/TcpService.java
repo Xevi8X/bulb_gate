@@ -99,6 +99,15 @@ public class TcpService {
         executeTCPRequest(id, requestTCP);
     }
 
+    public void setBulbName(String id, String name) {
+        RequestTCP requestTCP = new RequestTCP(
+                1,
+                "set_name",
+                name
+        );
+        executeTCPRequest(id, requestTCP);
+    }
+
     private void executeTCPRequest(String id, RequestTCP requestTCP)
     {
         try
